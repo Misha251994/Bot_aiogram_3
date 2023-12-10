@@ -7,10 +7,10 @@ from aiogram import Bot
 from app.keyboards.inline_kb import choice_start_kb
 from app.utils.commands import command
 
-router = Router()
+base_router = Router()
 
 
-@router.message(CommandStart())
+@base_router.message(CommandStart())
 async def command_start_handler(message: Message, bot: Bot) -> None:
     """
     This handler receives messages with `/start` command
@@ -21,13 +21,13 @@ async def command_start_handler(message: Message, bot: Bot) -> None:
         "Click on the command <b>Catalog 🛒</b>\n\n"
         "But first <b>you need to register</b>,"
         "otherwise the other commands will not be available!\n\n"
-        "Click on <b>Registration ✌️</b> or <b>Log in 👋</b>",
+        "Click on <b>Registration ✒️ ✌️</b> or <b>Log in 🚪👋</b>",
         reply_markup=choice_start_kb(),
     )
     await command(bot)
 
 
-@router.message()
+@base_router.message()
 async def echo_handler(message: types.Message) -> None:
     """
     Handler will forward receive a message back to the sender

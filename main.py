@@ -1,19 +1,19 @@
 import asyncio
 import logging
-from aiogram import Bot, Dispatcher
+from typing import Text
+
+from aiogram import Bot, Dispatcher, F
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from app.handlers import router_list
+from app.handlers.registration_handler import start_register
+from app.utils.commands import command
 from config import TELEGRAM_USER_ID, Token
-from app.database import models
-from app.database.db_connect import init_db
-
-# from handlers import base_handlers
-# from utils.commands import command
 
 
 async def start_bot(bot: Bot):
     # await init_db()
-    # await command(bot)
+    await command(bot)
     await bot.send_message(TELEGRAM_USER_ID, text="Bot start")
 
 
@@ -30,7 +30,7 @@ async def main() -> None:
 
     dp = Dispatcher(storage=MemoryStorage())
     bot = Bot(token=Token, parse_mode="HTML")
-    # dp.include_router(base_handlers.router)
+    dp.include_routers(*router_list)
     dp.startup.register(start_bot)
     dp.shutdown.register(stop_bot)
 

@@ -9,7 +9,7 @@ from app.utils.user_crud import create_user
 
 register_router = Router()
 
-async_session = get_session()
+session = get_session()
 
 
 @register_router.callback_query(F.data == "Registration")
@@ -59,7 +59,7 @@ async def add_mb_phone(message: Message, state: FSMContext):
 
 
 @register_router.message(RegisterState.reg_password, F.text)
-async def add_password(message: Message, state: FSMContext):
+async def add_password(message: Message, state: FSMContext, session: session):
     await state.update_data(password=message.text)
     tel_user_id = message.from_user.id
     reg_data = await state.get_data()
@@ -67,7 +67,8 @@ async def add_password(message: Message, state: FSMContext):
     reg_email = reg_data.get("email")
     reg_mb_phone = reg_data.get("mb_phone")
     reg_password = reg_data.get("password")
-    await create_user(
+    async with session.begin():
+        await create_user(
         async_session,
         user_id=tel_user_id,
         username=reg_username,

@@ -67,9 +67,8 @@ async def add_password(message: Message, state: FSMContext, session: session):
     reg_email = reg_data.get("email")
     reg_mb_phone = reg_data.get("mb_phone")
     reg_password = reg_data.get("password")
-    async with session.begin():
-        await create_user(
-        async_session,
+    user = await create_user(
+        session,
         user_id=tel_user_id,
         username=reg_username,
         email=reg_email,
